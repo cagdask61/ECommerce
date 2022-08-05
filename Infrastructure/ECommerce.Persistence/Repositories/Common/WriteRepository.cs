@@ -33,10 +33,10 @@ namespace ECommerce.Persistence.Repositories.Common
             Table.Remove(entity);
         }
 
-        public async void RemoveAsync(string id)
+        public async Task RemoveAsync(string id)
         {
             var entity = await Table.FirstOrDefaultAsync(e => e.Id == Guid.Parse(id));
-            _ = Table.Remove(entity);
+            Remove(entity);
         }
 
         public async Task<int> SaveAsync()

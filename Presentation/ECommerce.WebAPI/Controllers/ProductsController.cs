@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.Repositories.ProductRepository;
+using ECommerce.Application.ViewModels.Products;
 using ECommerce.Domain.Entities.Concretes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,21 +22,43 @@ namespace ECommerce.WebAPI.Controllers
         [HttpGet("get-all")]
         public IActionResult GetAll()
         {
-            return Ok(_productReadRepository.GetAll());
-        }
+            return Ok(_productReadRepository.GetAll(tracking:false));
+        }      
 
-        [HttpPost("add")]
-        public async Task<int> Add(Product product)
-        {
-            await _productWriteRepository.AddAsync(product);
-            return await _productWriteRepository.SaveAsync();
-        }
-
-        [HttpGet("get-by-id/{productId}")]
-        public async Task<IActionResult> GetByIdAsync(string productId)
+        [HttpGet("get-by-product-id/{productId}")]
+        public async Task<IActionResult> GetByProductIdAsync(string productId)
         {
             return Ok(await _productReadRepository.GetByIdAsync(productId,tracking:false));
         }
 
+        [HttpPost("add")]
+        public async Task<IActionResult> Add(VMCreateProduct vMCreateProduct)
+        {
+            await _productWriteRepository.AddAsync(
+                new()
+                {
+                    Name = vMCreateProduct.Name,
+                    Description = vMCreateProduct.Description,
+                    UnitPrice = vMCreateProduct.UnitPrice
+                });
+            return Ok(await _productWriteRepository.SaveAsync());
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(VMUpdateProduct vMUpdateProduct)
+        {
+            var product = await _productReadRepository.GetByIdAsync(vMUpdateProduct.Id);
+            product.Name = vMUpdateProduct.Name;
+            product.UnitPrice = vMUpdateProduct.UnitPrice;
+            product.Description = vMUpdateProduct.Description;
+            return Ok(await _productWriteRepository.SaveAsync());
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _productWriteRepository.RemoveAsync(id);
+            return Ok(await _productWriteRepository.SaveAsync());
+        }
     }
 }

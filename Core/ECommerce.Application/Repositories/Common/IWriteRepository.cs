@@ -9,7 +9,7 @@ namespace ECommerce.Application.Repositories.Common
         Task AddAsync(T entity);
 
         void Remove(T entity);
-        void RemoveAsync(string id);
+        Task RemoveAsync(string id);
 
         void Update(T entity);
 
