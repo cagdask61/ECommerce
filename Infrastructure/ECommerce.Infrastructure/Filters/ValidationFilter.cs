@@ -14,7 +14,11 @@ namespace ECommerce.Infrastructure.Filters
         {
             if (!context.ModelState.IsValid)
             {
-                var errors = context.ModelState.Where(m => m.Value.Errors.Any()).ToDictionary(s => s.Key, c => c.Value.Errors.Select(model => model.ErrorMessage)).ToArray();
+                var errors = context.ModelState
+                    .Where(m => m.Value.Errors.Any())
+                    .ToDictionary(m => m.Key, c => c.Value.Errors
+                    .Select(model => model.ErrorMessage))
+                    .ToList();
                 context.Result = new BadRequestObjectResult(errors);
                 return;
             }

@@ -1,4 +1,4 @@
-using ECommerce.Application.ValidationRules.FluentValidation;
+using ECommerce.Application.ValidationRules.Abstractions;
 using ECommerce.Infrastructure.Filters;
 using ECommerce.Persistence.DependencyResolvers;
 using FluentValidation.AspNetCore;
@@ -7,13 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 
-builder.Services.AddCors(options =>  
-    options.AddDefaultPolicy(policy =>  
-    policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod())
-);
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+    policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod()
+));
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
-    .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>() )
+    .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<IValidation>())
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddEndpointsApiExplorer();
