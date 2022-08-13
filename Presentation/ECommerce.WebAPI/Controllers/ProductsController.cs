@@ -69,7 +69,7 @@ namespace ECommerce.WebAPI.Controllers
         public async Task<IActionResult> Delete(string productId)
         {
             await _productWriteRepository.RemoveAsync(productId);
-            return Ok(await _productWriteRepository.SaveAsync());
+            return Ok(await _productWriteRepository.SaveAsync()); 
         }
     }
 }
