@@ -71,5 +71,7 @@ namespace ECommerce.WebAPI.Controllers
             await _productWriteRepository.RemoveAsync(productId);
             return Ok(await _productWriteRepository.SaveAsync());  
         }
+
+
     }
 }
